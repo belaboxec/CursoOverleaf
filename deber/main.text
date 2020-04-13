@@ -1,0 +1,207 @@
+%========= info ===================
+% Esta es una plantilla para reportes de laboratorio
+% Autor: Philip J Fry
+% Licencia: Creative Commons
+% ================================
+
+\documentclass[12pt]{article} % Declarando clase de documento
+%======= pre-ambulo ==========%
+\usepackage[utf8]{inputenc}
+% \usepackage[backend=biber, style=ieee, sorting=ynt]{biblatex}
+\usepackage[backend=biber, style=apa]{biblatex}
+\addbibresource{referencias.bib}
+
+%==== Generador de Texto Dummy ======
+\usepackage{lipsum}
+%===== Definiendo Idioma Español =======
+\usepackage[spanish]{babel}
+\selectlanguage{spanish}
+%===== Control de Margenes ======
+\usepackage[a4paper,tmargin=3cm,bmargin=2.5cm,lmargin=3cm, rmargin=2.5cm, bindingoffset=6mm]{geometry}
+%======================================================================================================
+% ======= librery graphicx=========
+\usepackage{graphicx}
+% =================================
+% ===== librerias matematicas ==========
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{amsthm}
+\usepackage{mathrsfs}
+% ======= Alienar a la izquierda =========
+\usepackage[document]{ragged2e}
+%====== Datos Generales =========
+\title{Teorema maestro} 
+\date{}
+\usepackage[document]{ragged2e}
+\begin{document}
+\maketitle
+En el análisis de algoritmos, el teorema maestro proporciona una solución sencilla en términos asintóticos (usando una Cota superior asintótica) para ecuaciones de recurrencia que ocurren en muchos algoritmos recursivos tales como en el Algoritmo divide y vencerás. Fue popularizado por el libro Introducción a los algoritmos por Cormen, Leiserson, Rivest, y Stein, en el cual fue tanto introducido como probado formalmente. No todas las ecuaciones de recurrencia pueden ser resueltas con el uso del teorema maestro.
+%======= Documento ==============
+
+
+
+\tableofcontents
+\section{Introducción}
+Considere un problema que puede ser resuelto a través de un algoritmo recursivo como el siguiente:
+
+En el algoritmo mostrado arriba se divide el problema original en una cantidad menor de subproblemas de manera recursiva, cada uno de estos subproblemas siendo del tamaño de n/b. Esto podría ser visualizado como la construcción de un árbol de llamadas al problema, siendo cada nodo del árbol una instancia recursiva del mismo y sus hijos siendo instancias de las llamadas subsiguientes. En el ejemplo de arriba, cada nodo tendría un número a de hijos. Cada nodo hará la cantidad de trabajo correspondiente al tamaño del subproblema n, pasado a esa instancia en particular, estando la cantidad de trabajo realizado determinado por $f(n)$. El trabajo total realizado por todas las llamadas del árbol es la suma de los trabajos hechos por cada uno de los nodos del árbol.
+
+Algoritmos como el descrito arriba pueden ser representados por una relación de recurrencia como la siguiente: $T(n) = aT (\frac{n}{b}) + f(n)$. 
+Esta relación de recurrencia puede ser sucesivamente sustituida en sí misma y expandida hasta obtener una expresión que represente la cantidad total de trabajo. \textcite{DukeUniversity}
+
+El teorema maestro nos permite fácilmente calcular el tiempo de ejecución de este tipo de algoritmos recursivos en notación de Cota superior asintótica, sin la necesidad de hacer la expansión de las distintas llamadas recursivas.
+
+\section{Forma genérica}
+El teorema maestro sirve para resolver relaciones recursivas de la siguiente forma:
+
+$T(n) = a*T (\frac{n}{b}) + f(n)$  donde  $ a\geq1, b>1$. 
+
+En la aplicación de análisis de algoritmos recursivos, las constantes y funciones toman los siguientes significados:
+
+\begin{itemize}
+    \item $n$ es el tamaño del problema a resolver.
+    \item $a$ es el número de subproblemas en la recursión.
+    \item $\frac{n}{b}$ el tamaño de cada subproblema. (Aquí se asume que todos los subproblemas tienen el mismo tamaño)
+    \item $f(n)$ es el costo del trabajo hecho fuera de las llamadas recursivas, que incluye el costo de la división del problema y el costo de unir las soluciones de los subproblemas.
+\end{itemize}
+Luego, es posible realizar una cota en notación Big O en los siguientes tres casos:
+
+\subsection{Caso 1}
+\subsubsection{Forma Genérica}
+Si $f(n)=O(n^{c})$ donde $c<\log_b{a}$ (usando Cota superior asintótica)
+
+entonces:
+
+$T(n)=\theta (n^{\log_b{a}})$
+
+\subsubsection{Ejemplo}
+$T(n)=8T \frac{n}{2} + 1000 n^{2}$
+
+Como puede verse en la fórmula de arriba:
+
+$a=8, b=2, f(n)=1000 n^{2}$, entonces $ f(n)=O(n^{2})$, donde $c=2$
+
+Luego, vemos que se cumple la condición del caso 1:
+
+$log_{\dot{o}}{a} = log_28 = 3 > c$
+
+Luego por el teorema maestro tenemos que
+
+$T(n) = \theta (n^{log_ba})=\theta (n^3)$
+
+\subsection{Caso 2}
+\subsubsection{Forma Genérica}
+Si es verdad que para alguna constante $k \geq 0$, que:
+
+$ f(n)=\theta(n^{c} (\log n)^k)$, donde $c=\log_ba$
+
+Entonces:
+
+$T(n) = \theta(n^{c} (\log n)^{k+1})$
+
+
+
+\subsubsection{Ejemplo}
+
+$T(n) = 2T \frac{n}{2} + 10n$
+
+Como podemos ver en la fórmula de arriba, las variables tienen los siguientes valores:
+
+$a=2$
+
+$b=2$
+
+$c=2$
+
+$f(n)=\theta(n^{c} \log k n)$ donde $c=1, k=0$
+
+Luego, nos fijamos que cumpla la condición del caso 2:
+
+$log_{\dot{o}}{a} = \log_22 = 1$, luego, se cumple que $c=\log_ba$
+
+Entonces por el segundo caso del teorema maestro:
+
+$T(n) = \theta (n^{\log_ba} (\log n)^{k+1}) = \theta (n^{1} \log n) = \theta (n \log n)$
+
+Dando de esa manera que la relación de recurrencia de $T(n)$ es $\theta(n \log n)$
+
+\subsection{Caso 3}
+\subsubsection{forma genérica}
+Si es verdad que:
+
+$f(n) = \Omega (n^c)$ donde $c>\log_ba$
+
+Y si es verdad además que:
+
+$af \frac{n}{b} \leq k f(n)$ para alguna constante $k<1$ y suficientemente grande $n$
+
+Entonces:
+
+$T(n)=\theta(f(n))$
+
+\subsubsection{Ejemplo}
+$T(n)=2T(\frac{n}{2}) +n^2$
+
+Como puede verse en la fórmula de arriba, las variables obtienen los siguientes valores:
+
+$a=2, b=2, f(n)=n^2$
+
+$f(n) = \Omega (n^c)$ , donde $c=2$
+
+Luego se comprueba que satisface la condición del caso 3:
+
+$\log_ba = \log_22 =1$ , y por lo tanto se cumple que, $c>\log_ba$
+
+La condición también se cumple:
+
+$2 \frac{n^2}{4} \leq k n^2$, eligiendo $k=\frac{1}{2}$
+
+Entonces por el tercer caso del teorema maestro:
+
+$T(n) = \theta (f(n)) = \theta (n^2)$
+
+Por consiguiente la relación de recurrencia $T(n)$ es $in \theta(n^2)$.
+\section{Casos Irresolubles}
+Los siguientes casos no pueden ser resueltos a través de la utilización del teorema maestro: \parencite{MIT}
+
+\begin{itemize}
+\item $T(n)= 2^{n} T \frac{n}{2} + n^n $
+
+$a$ no es una constante; el número de subproblemas debe ser fijo.
+
+\item $T(n)= 2 T \frac{n}{2} + \frac{n}{\log n} $ 
+
+$f(n)$ debe ser polinomial.
+
+\item $T(n)= 0.5 T \frac{n}{2} + n $ 
+
+$a<1$ no puede darse el caso de que haya menos de un subproblema.
+
+\item $T(n)= 64 T \frac{n}{8} - n^2 \log n $ 
+
+$f(n)$ que es el tiempo de trabajo, no puede ser negativo.
+
+\item $T(n)= T \frac{n}{2} + n(2-cos(n) $ 
+
+Caso 3 pero hay una violación de regularidad.
+
+\end{itemize}
+
+\section{Bibliografía}
+\begin{itemize}
+\item Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, and Clifford Stein. Introduction to Algorithms, Second Edition. MIT Press and McGraw-Hill, 2001. ISBN 0-262-03293-7. Sections 4.3 (The master method) and 4.4 (Proof of the master theorem), pp. 73–90.
+
+\item Michael T. Goodrich and Roberto Tamassia. Algorithm Design: Foundation, Analysis, and Internet Examples. Wiley, 2002. ISBN 0-471-38365-1. The master theorem (including the version of Case 2 included here, which is stronger than the one from CLRS) is on pp. 268-270.
+\end{itemize}
+
+\section{Véase También}
+\begin{itemize}
+\item Ecuación recurrente
+\end{itemize}
+
+\printbibliography[title={}]
+
+
+
+
+
+\end{document}
